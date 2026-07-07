@@ -1,0 +1,6 @@
+{
+  "name": "HackerRank Landing Page",
+  "description": "A precise, pixel-perfect replication of the HackerRank future of development landing page as shown in the design video.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
