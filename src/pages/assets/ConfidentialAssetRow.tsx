@@ -1,10 +1,10 @@
 import { Link } from "react-router"
 import { ExternalLink } from "lucide-react"
-import { TOKEN_PAIRS } from "@/lib/tokens"
+import type { TokenPair } from "@/lib/tokens"
 import { DecryptBalanceButton } from "@/components/decrypt/DecryptBalanceButton"
 import { Button } from "@/components/ui/button"
 
-export function ConfidentialAssetRow({ pair }: { pair: (typeof TOKEN_PAIRS)[number] }) {
+export function ConfidentialAssetRow({ pair }: { pair: TokenPair }) {
   return (
     <div className="flex items-center justify-between gap-4 rounded-xl border border-border bg-card px-4 py-3">
       <div className="min-w-0 flex-1">

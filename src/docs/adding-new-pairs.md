@@ -13,19 +13,41 @@ Qube supports a hybrid registry model: the on-chain Wrappers Registry is the pri
 
 You need:
 
-- The **ERC-20 token address** on Sepolia
-- The **ERC-7984 wrapper address** on Sepolia
+- The **ERC-20 token address** on your target network (Sepolia or mainnet)
+- The **ERC-7984 wrapper address** on your target network
 
 ### Step 2: Add to `src/lib/tokens.ts`
 
-Open `src/lib/tokens.ts` and add a new entry to the `TOKEN_PAIRS` array:
+Open `src/lib/tokens.ts` and add a new entry to the appropriate array:
+
+- `TOKEN_PAIRS` for Sepolia test tokens (use `Mock` suffix)
+- `MAINNET_TOKEN_PAIRS` for Ethereum mainnet tokens
 
 ```typescript
+// For Sepolia
 export const TOKEN_PAIRS: TokenPair[] = [
   // ... existing pairs
   {
     symbol: "cMYTOKENMock",
     name: "Confidential MYTOKEN Mock",
+    displayName: "MYTOKEN",
+    erc20: {
+      address: "0xYourERC20AddressHere",
+      decimals: 18,
+    },
+    erc7984: {
+      address: "0xYourERC7984AddressHere",
+      decimals: 18,
+    },
+  },
+]
+
+// For Mainnet
+export const MAINNET_TOKEN_PAIRS: TokenPair[] = [
+  // ... existing pairs
+  {
+    symbol: "cMYTOKEN",
+    name: "Confidential MYTOKEN",
     displayName: "MYTOKEN",
     erc20: {
       address: "0xYourERC20AddressHere",
@@ -69,7 +91,7 @@ To register a pair permanently in the Wrappers Registry contract, you need to de
 
 ### Prerequisites
 
-- Deploy an ERC-20 token on Sepolia
+- Deploy an ERC-20 token on your target network (Sepolia or mainnet)
 - Deploy a [ConfidentialWrapper](https://github.com/zama-ai/protocol-apps/blob/main/contracts/confidential-wrapper/contracts/ConfidentialWrapper.sol) contract for your token
 - Register the pair in the [Wrappers Registry](https://docs.zama.org/protocol/protocol-apps/confidential-tokens/wrapper-registry)
 

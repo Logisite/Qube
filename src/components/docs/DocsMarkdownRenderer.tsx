@@ -142,7 +142,7 @@ export function DocsMarkdownRenderer({ content, onHeadingsExtracted }: DocsMarkd
             const isExternal = href?.startsWith("http")
             const isInternal = href?.startsWith("/")
 
-            if (isInternal && !isExternal) {
+            if (isInternal && !isExternal && href) {
               return (
                 <Link
                   to={href}

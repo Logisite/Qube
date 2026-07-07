@@ -3,7 +3,7 @@ import { Link } from "react-router"
 import { formatUnits } from "viem"
 import { Loader2, ExternalLink } from "lucide-react"
 import { toast } from "sonner"
-import { TOKEN_PAIRS } from "@/lib/tokens"
+import type { TokenPair } from "@/lib/tokens"
 import { Button } from "@/components/ui/button"
 import { saveActivity } from "./activity"
 
@@ -14,7 +14,7 @@ export function StandardAssetRow({
   balance,
   onRefetch,
 }: {
-  pair: (typeof TOKEN_PAIRS)[number]
+  pair: TokenPair
   isPending: boolean
   onMint: (tokenAddress: `0x${string}`, rawAmount: bigint) => Promise<unknown>
   balance: bigint | undefined

@@ -1,11 +1,13 @@
 import { Loader2, Rocket } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import type { TokenPair } from "@/lib/tokens"
 
 interface MintBundleButtonProps {
   onMintAll: () => Promise<unknown>
   isPending: boolean
   currentIndex: number
   totalTokens: number
+  pairs: TokenPair[]
 }
 
 export function MintBundleButton({
@@ -13,7 +15,15 @@ export function MintBundleButton({
   isPending,
   currentIndex,
   totalTokens,
+  pairs,
 }: MintBundleButtonProps) {
+  const summary = pairs
+    .map((p) => {
+      const amount = p.symbol.includes("WETH") ? "1" : "1M"
+      return `${amount} ${p.displayName}`
+    })
+    .join(" · ")
+
   return (
     <div className="space-y-2">
       <Button
@@ -31,7 +41,7 @@ export function MintBundleButton({
           : "Mint Dev Bundle (1M of each)"}
       </Button>
       <p className="text-center text-xs text-muted-foreground">
-        1M USDC · 1M USDT · 1 WETH · 1M BRON · 1M ZAMA · 1M tGBP · 1M XAUt
+        {summary}
       </p>
     </div>
   )

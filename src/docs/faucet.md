@@ -7,6 +7,10 @@ description: Claim official cTokenMock test tokens on Sepolia.
 
 The Faucet page lets you claim official cTokenMock test tokens on the Sepolia testnet. These are the same tokens registered in the [Confidential Token Wrappers Registry](https://docs.zama.org/protocol/protocol-apps/confidential-tokens/wrapper-registry), so you can immediately try the wrap and unwrap flow.
 
+## Network Availability
+
+The faucet is available on **Sepolia only**. On Ethereum mainnet, you need to already have ERC-20 tokens (USDC, USDT, WETH, etc.) in your wallet to use the wrap and unwrap features.
+
 ## How to Use the Faucet
 
 ### Step 1: Navigate to Faucet

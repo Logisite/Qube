@@ -7,11 +7,16 @@ description: Common questions and troubleshooting.
 
 ### What is Qube?
 
-Qube is a Confidential Wrapper Registry dApp. It lets you browse, wrap, unwrap, and decrypt official ERC-20 to ERC-7984 wrapper pairs on the Sepolia testnet.
+Qube is a Confidential Wrapper Registry dApp. It lets you browse, wrap, unwrap, and decrypt official ERC-20 to ERC-7984 wrapper pairs on Sepolia (testnet) and Ethereum mainnet.
 
-### What network does Qube use?
+### What networks does Qube support?
 
-Qube runs on **Sepolia** testnet only. Make sure your wallet is connected to Sepolia before using any features.
+Qube supports two networks:
+
+- **Sepolia** (testnet) with 7 token pairs (all with `Mock` suffix)
+- **Ethereum mainnet** with 9 token pairs
+
+Make sure your wallet is connected to the correct network before using any features.
 
 ### What is ERC-7984?
 
@@ -26,7 +31,7 @@ ERC-20 tokens have public balances visible to everyone. ERC-7984 tokens have enc
 ### My wallet is not connecting
 
 1. Make sure your wallet extension is installed and unlocked
-2. Check that you are on the **Sepolia** network
+2. Check that you are on the correct network (Sepolia or mainnet)
 3. Try refreshing the page and reconnecting
 
 ### I do not have Sepolia ETH
@@ -45,8 +50,8 @@ You need Sepolia ETH to pay for gas on transactions.
 Common causes:
 
 - **Insufficient ERC-20 balance**: You do not have enough tokens to wrap
-- **Insufficient gas**: You need Sepolia ETH for the transaction
-- **Wrong network**: Make sure your wallet is on Sepolia
+- **Insufficient gas**: You need ETH for the transaction (Sepolia ETH or mainnet ETH)
+- **Wrong network**: Make sure your wallet is on the correct network
 - **Approval failed**: Check that the ERC-20 approval transaction was confirmed
 
 ### The unwrap transaction failed
@@ -55,7 +60,7 @@ Common causes:
 
 - **Insufficient confidential balance**: You do not have enough encrypted tokens to unwrap
 - **Decryption not authorized**: Click **Decrypt** first to authorize the decryption session
-- **Wrong network**: Make sure your wallet is on Sepolia
+- **Wrong network**: Make sure your wallet is on the correct network
 
 ### How long does unwrap take?
 
@@ -64,7 +69,7 @@ Unwrapping is a two-step process:
 1. The unwrap transaction is submitted (1-2 minutes)
 2. The finalize transaction is submitted after decryption (1-2 minutes)
 
-Total time is typically 2-4 minutes on Sepolia.
+Total time is typically 2-4 minutes on Sepolia and 2-4 minutes on mainnet.
 
 ## Decryption
 
@@ -74,7 +79,7 @@ Common causes:
 
 - **Not authorized**: Click **Decrypt** to sign the EIP-712 permit
 - **Session expired**: Decryption sessions have a TTL. Click **Decrypt** again to refresh
-- **Wrong network**: Make sure your wallet is on Sepolia
+- **Wrong network**: Make sure your wallet is on the correct network
 
 ### Why do I need to sign a decryption permit?
 
@@ -88,7 +93,7 @@ Yes. On the [Assets](/assets) page, enter the ERC-7984 contract address in the c
 
 ### Why can I not mint some tokens?
 
-Some tokens have restricted mint functions. Only tokens with permissionless faucets can be minted directly. Check the [Faucet](/docs/faucet) page for details.
+The faucet is available on Sepolia only. Some tokens have restricted mint functions. Only tokens with permissionless faucets can be minted directly. Check the [Faucet](/docs/faucet) page for details.
 
 ### How many tokens can I claim?
 

@@ -15,11 +15,20 @@ Many developers spin up their own ERC-20 testnet tokens and ERC-7984 wrappers in
 
 Qube is a **Confidential Wrapper Registry** that turns the official Zama Wrappers Registry into a usable product. It is a single dApp where every developer and user can:
 
-- **Browse** all official ERC-20 to ERC-7984 wrapper pairs on Sepolia
+- **Browse** all official ERC-20 to ERC-7984 wrapper pairs on Sepolia and Ethereum mainnet
 - **Wrap** any registry ERC-20 into its confidential ERC-7984 equivalent
 - **Unwrap** confidential tokens back to their public ERC-20 form
 - **Decrypt** encrypted balances using EIP-712 user decryption
-- **Claim** official cTokenMock test tokens via the built-in faucet
+- **Claim** official cTokenMock test tokens via the built-in faucet (Sepolia only)
+
+## Supported Networks
+
+Qube supports two networks:
+
+| Network | Registry Address | Use Case |
+|---------|-----------------|----------|
+| **Sepolia** (testnet) | `0x2f0750Bbb0A246059d80e94c454586a7F27a128e` | Testing with mock tokens |
+| **Ethereum Mainnet** | `0xeb5015fF021DB115aCe010f23F55C2591059bBA0` | Production use with real tokens |
 
 ## Why Canonical Pairs Matter
 
@@ -38,8 +47,8 @@ Qube reads the official on-chain Wrappers Registry as the primary source of trut
 
 The core flow:
 
-1. **Connect** your wallet to Sepolia
-2. **Claim** test tokens from the faucet
+1. **Connect** your wallet to Sepolia or Ethereum mainnet
+2. **Claim** test tokens from the faucet (Sepolia only)
 3. **Wrap** an ERC-20 token into its confidential form
 4. **Decrypt** your encrypted balance to see the amount
 5. **Unwrap** back to the public ERC-20 when done
@@ -49,5 +58,5 @@ All shield, unshield, and decrypt operations are powered by [Zama's FHE SDK](htt
 ## Learn More
 
 - [Quickstart Guide](/docs/quickstart) to get up and running
-- [Supported Tokens](/docs/supported-tokens) for the full list of official pairs
+- [Supported Tokens](/docs/supported-tokens) for the full list of official pairs on both networks
 - [ERC-7984 Standard](https://eips.ethereum.org/EIPS/eip-7984) for the technical specification

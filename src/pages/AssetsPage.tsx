@@ -43,7 +43,7 @@ export function AssetsPage() {
     } catch {
       toast.error("Bundle mint failed")
     }
-  }, [mintAll])
+  }, [mintAll, pairs])
 
   return (
     <div className="relative mx-auto max-w-2xl px-4 py-12">

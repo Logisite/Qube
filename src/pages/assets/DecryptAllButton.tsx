@@ -1,19 +1,22 @@
 import { useState } from "react"
+import { useAccount } from "wagmi"
 import { formatUnits } from "viem"
 import { Loader2 } from "lucide-react"
 import { toast } from "sonner"
-import { TOKEN_PAIRS } from "@/lib/tokens"
+import { getTokenPairsForChain } from "@/lib/tokens"
 import { useDecryptBalances } from "@/hooks/useDecrypt"
 import { Button } from "@/components/ui/button"
 import { saveActivity } from "./activity"
 
 export function DecryptAllButton() {
+  const { chainId } = useAccount()
+  const pairs = getTokenPairsForChain(chainId)
   const [decrypted, setDecrypted] = useState(false)
   const [batchResult, setBatchResult] = useState<{
     results: Map<string, bigint>
     errors: Map<string, Error>
   } | null>(null)
-  const addresses = TOKEN_PAIRS.map((p) => p.erc7984.address)
+  const addresses = pairs.map((p) => p.erc7984.address)
   const { isLoading, refetch } = useDecryptBalances(addresses, false)
 
   async function handleDecryptAll() {
@@ -41,7 +44,7 @@ export function DecryptAllButton() {
           Hide All Balances
         </Button>
         <div className="rounded-xl border border-border bg-card p-4 space-y-2">
-          {TOKEN_PAIRS.map((pair) => {
+          {pairs.map((pair) => {
             const balance = batchResult.results.get(pair.erc7984.address)
             const err = batchResult.errors.get(pair.erc7984.address)
             return (

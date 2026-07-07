@@ -8,23 +8,27 @@ description: Get up and running in minutes: connect, claim, wrap, decrypt.
 Before you begin, make sure you have:
 
 - A browser wallet (MetaMask, Rainbow, etc.)
-- Your wallet connected to the **Sepolia** testnet
-- Some Sepolia ETH for gas (get it from a [Sepolia faucet](https://sepoliafaucet.com))
+- Your wallet connected to **Sepolia** (testnet) or **Ethereum mainnet**
+- Some ETH for gas (Sepolia ETH from a [faucet](https://sepoliafaucet.com), or mainnet ETH)
 
 ## Step 1: Connect Your Wallet
 
 1. Open the [Qube app](/)
 2. Click **Connect Wallet** in the top right
 3. Select your wallet and approve the connection
-4. Make sure you are on the **Sepolia** network
+4. Make sure you are on the correct network (Sepolia or mainnet)
 
-## Step 2: Get Test Tokens
+## Step 2: Get Test Tokens (Sepolia Only)
+
+If you are on Sepolia:
 
 1. Navigate to the [Faucet](/faucet) page
 2. Click **Mint Dev Bundle** to claim all official cTokenMock test tokens at once
 3. Wait for the transactions to confirm on Sepolia
 
 You now have a set of public ERC-20 tokens ready to wrap.
+
+If you are on mainnet, you need to already have ERC-20 tokens (USDC, USDT, WETH, etc.) in your wallet.
 
 ## Step 3: Wrap a Token
 
@@ -68,5 +72,6 @@ Under the hood, Qube used [Zama's FHE SDK](https://docs.zama.org/protocol/sdk) t
 ## Next Steps
 
 - [Browse the Registry](/docs/registry) to see all official token pairs
+- [Supported Tokens](/docs/supported-tokens) for the full list of pairs on both networks
 - [Learn about Decryption](/docs/decrypt) to understand the EIP-712 flow
 - [Add New Token Pairs](/docs/adding-new-pairs) to extend the registry

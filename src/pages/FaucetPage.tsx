@@ -49,7 +49,7 @@ export function FaucetPage() {
           <div className="space-y-2">
             <p className="text-lg font-medium text-foreground">Faucet not available on Mainnet</p>
             <p className="text-sm text-muted-foreground max-w-sm">
-              The faucet only works on Sepolia testnet. Switch to Sepolia to claim free test tokens.
+              The faucet only works on testnet. Switch to Sepolia to claim free test tokens.
             </p>
           </div>
         </div>
@@ -80,6 +80,7 @@ export function FaucetPage() {
             isPending={isPending}
             currentIndex={currentIndex}
             totalTokens={FAUCET_PAIRS.length}
+            pairs={FAUCET_PAIRS}
           />
 
           <div className="relative">

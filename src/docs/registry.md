@@ -1,11 +1,20 @@
 ---
 title: Browse Registry
-description: Explore all official ERC-20 to ERC-7984 wrapper pairs on Sepolia.
+description: Explore all official ERC-20 to ERC-7984 wrapper pairs on Sepolia and mainnet.
 ---
 
 ## What Is the Registry?
 
-The Registry page shows all official ERC-20 to ERC-7984 wrapper pairs registered on the Sepolia testnet. It reads from the on-chain [Confidential Token Wrappers Registry](https://docs.zama.org/protocol/protocol-apps/confidential-tokens/wrapper-registry) contract.
+The Registry page shows all official ERC-20 to ERC-7984 wrapper pairs registered on the selected network. It reads from the on-chain [Confidential Token Wrappers Registry](https://docs.zama.org/protocol/protocol-apps/confidential-tokens/wrapper-registry) contract.
+
+## Supported Networks
+
+Qube supports two networks with separate registries:
+
+| Network | Registry Address | Etherscan |
+|---------|-----------------|-----------|
+| **Sepolia** (testnet) | `0x2f0750Bbb0A246059d80e94c454586a7F27a128e` | [View](https://sepolia.etherscan.io/address/0x2f0750Bbb0A246059d80e94c454586a7F27a128e) |
+| **Ethereum Mainnet** | `0xeb5015fF021DB115aCe010f23F55C2591059bBA0` | [View](https://etherscan.io/address/0xeb5015fF021DB115aCe010f23F55C2591059bBA0) |
 
 ## How to Use the Registry
 
@@ -13,8 +22,8 @@ The Registry page shows all official ERC-20 to ERC-7984 wrapper pairs registered
 
 Navigate to the [Registry](/registry) page to see all available pairs. Each row displays:
 
-- **Token name** (for example, "Confidential USDC Mock")
-- **Symbol** (for example, "cUSDCMock")
+- **Token name** (for example, "Confidential USDC Mock" or "Confidential USDC")
+- **Symbol** (for example, "cUSDCMock" or "cUSDC")
 - **ERC-20 address** (the underlying public token)
 - **ERC-7984 address** (the confidential wrapper token)
 
@@ -28,13 +37,7 @@ Click the column headers to sort by name or symbol. Click again to reverse the s
 
 ## On-Chain Data
 
-Qube fetches registry data directly from the on-chain contract at address:
-
-```
-0x2f0750Bbb0A246059d80e94c454586a7F27a128e
-```
-
-If the on-chain fetch fails, the app falls back to a locally cached set of token pairs.
+Qube fetches registry data directly from the on-chain contract. If the on-chain fetch fails, the app falls back to a locally cached set of token pairs.
 
 ### Registry ABI
 
