@@ -7,11 +7,9 @@ import { GlassFilterSvg } from "@/components/GlassFilterSvg"
 
 export function Layout() {
   const { pathname } = useLocation()
-  const isLanding = pathname === "/"
   const smootherRef = useRef<ScrollSmoother | null>(null)
 
   useEffect(() => {
-    if (isLanding) return
     smootherRef.current = ScrollSmoother.create({
       smooth: 1.5,
       effects: true,
@@ -20,21 +18,11 @@ export function Layout() {
     return () => {
       smootherRef.current?.kill()
     }
-  }, [isLanding])
+  }, [])
 
   useEffect(() => {
     smootherRef.current?.scrollTo(0, false)
   }, [pathname])
-
-  if (isLanding) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <GlassFilterSvg />
-        <Outlet />
-        <Toaster />
-      </div>
-    )
-  }
 
   return (
     <div id="smooth-wrapper">

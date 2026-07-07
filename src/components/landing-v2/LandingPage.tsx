@@ -8,7 +8,6 @@ import { ProblemCard } from "./ProblemCard"
 import { HowItWorksCard } from "./HowItWorksCard"
 import { CtaCard } from "./CtaCard"
 import { AnimationEditor } from "./AnimationEditor"
-import { ChainSwitcher } from "@/components/layout/ChainSwitcher"
 import logoWhite from "@/assets/logos/logo-white.svg"
 import logoBlack from "@/assets/logos/logo-black.svg"
 
@@ -78,12 +77,11 @@ function LandingPageInner() {
           </div>
 
           <nav className={`hidden md:flex items-center gap-8 font-semibold text-sm transition-colors ${headerTheme === "dark" ? "text-neutral-400" : "text-neutral-500"}`}>
-            <a href="#" className={`transition-colors ${headerTheme === "dark" ? "hover:text-white" : "hover:text-neutral-900"}`}>Registry</a>
-            <a href="#" className={`transition-colors ${headerTheme === "dark" ? "hover:text-white" : "hover:text-neutral-900"}`}>Docs</a>
+            <Link to="/registry" className={`transition-colors no-underline ${headerTheme === "dark" ? "hover:text-white" : "hover:text-neutral-900"}`}>Registry</Link>
+            <Link to="/docs" className={`transition-colors no-underline ${headerTheme === "dark" ? "hover:text-white" : "hover:text-neutral-900"}`}>Docs</Link>
           </nav>
 
           <div className="flex items-center gap-3">
-            <ChainSwitcher />
             <button
               onClick={toggleEditor}
               className={`p-2 rounded-lg transition-colors ${headerTheme === "dark" ? "hover:bg-white/10 text-neutral-400 hover:text-white" : "hover:bg-black/10 text-neutral-500 hover:text-neutral-900"}`}

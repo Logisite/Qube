@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react"
 import { useAccount, useSwitchChain } from "wagmi"
+import { useConnectModal } from "@rainbow-me/rainbowkit"
 import { toast } from "sonner"
 import { ChevronDown, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -13,9 +14,11 @@ const chainEntries = Object.entries(SUPPORTED_CHAINS) as unknown as [
 
 export function ChainSwitcher() {
   const [open, setOpen] = useState(false)
+  const [pendingChainId, setPendingChainId] = useState<SupportedChainId | null>(null)
   const ref = useRef<HTMLDivElement>(null)
   const { chainId, isConnected } = useAccount()
   const { switchChain, isPending } = useSwitchChain()
+  const { openConnectModal } = useConnectModal()
 
   const current = chainId
     ? (SUPPORTED_CHAINS[chainId as SupportedChainId] ?? SUPPORTED_CHAINS[11155111])
@@ -32,14 +35,35 @@ export function ChainSwitcher() {
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
+  useEffect(() => {
+    if (isConnected && pendingChainId && chainId !== pendingChainId) {
+      switchChain(
+        { chainId: pendingChainId },
+        {
+          onSuccess: () => {
+            toast.success(`Switched to ${SUPPORTED_CHAINS[pendingChainId].name}`)
+          },
+          onError: () => {
+            toast.error("Network switch cancelled")
+          },
+        },
+      )
+    }
+    if (isConnected && pendingChainId) {
+      setPendingChainId(null)
+    }
+  }, [isConnected, chainId, pendingChainId, switchChain])
+
   function handleSwitch(target: SupportedChainId) {
     if (target === activeChainId) {
       setOpen(false)
       return
     }
     if (!isConnected) {
-      toast.info("Connect wallet to switch network")
       setOpen(false)
+      toast.info("Connect your wallet to switch networks")
+      setPendingChainId(target)
+      openConnectModal?.()
       return
     }
     switchChain(

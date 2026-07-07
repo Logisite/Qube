@@ -34,3 +34,7 @@ export function isTestnet(chainId: number | undefined) {
   const config = getChainConfig(chainId)
   return config.isTestnet
 }
+
+export function isSupportedChain(chainId: number | undefined): boolean {
+  return !!chainId && chainId in SUPPORTED_CHAINS
+}

@@ -2,11 +2,13 @@ import { useMemo } from "react"
 import { useSearchParams } from "react-router"
 import { useAccount } from "wagmi"
 import { useConnectModal } from "@rainbow-me/rainbowkit"
+import { AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { WrapForm } from "@/components/wrap/WrapForm"
 import { useRegistryPairs } from "@/hooks/useRegistryPairs"
 import { mergePairs } from "@/lib/mergePairs"
 import { getTokenPairsForChain } from "@/lib/tokens"
+import { isSupportedChain } from "@/lib/chains"
 
 export function WrapPage() {
   const { isConnected, chainId } = useAccount()
@@ -42,8 +44,18 @@ export function WrapPage() {
             Connect your wallet to wrap tokens.
           </p>
         </div>
-      ) : (
+      ) : isSupportedChain(chainId) ? (
         <WrapForm pairs={mergedPairs} initialTokenIndex={initialTokenIndex} />
+      ) : (
+        <div className="flex items-center gap-3 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4">
+          <AlertTriangle className="size-5 text-yellow-500 shrink-0" />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-foreground">Unsupported Network</p>
+            <p className="text-xs text-muted-foreground">
+              Connect to Sepolia or Ethereum mainnet to wrap tokens.
+            </p>
+          </div>
+        </div>
       )}
     </div>
   )

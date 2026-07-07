@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react"
-import { Link } from "react-router"
+import { useNavigate } from "react-router"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { codeToHtml } from "shiki"
@@ -38,17 +38,37 @@ function CodeBlock({ children, className }: { children: string; className?: stri
 
   if (html) {
     return (
-      <div className="relative group my-4">
-        <div className="absolute top-2 right-2 z-10">
+      <div className="my-5 rounded-xl border border-white/10 bg-[#0a0a0a] overflow-hidden group">
+        <div className="flex items-center justify-between px-4 py-2.5 bg-white/[0.03] border-b border-white/5">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+              <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
+              <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
+            </div>
+            <span className="text-[11px] font-mono font-medium text-white/40 uppercase tracking-wider ml-1">
+              {language}
+            </span>
+          </div>
           <button
             onClick={handleCopy}
-            className="p-1.5 rounded-md bg-white/10 text-white/50 hover:bg-white/20 hover:text-white opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium text-white/40 hover:text-white/70 hover:bg-white/5 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
           >
-            {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+            {copied ? (
+              <>
+                <Check className="h-3 w-3 text-green-400" />
+                <span className="text-green-400">Copied</span>
+              </>
+            ) : (
+              <>
+                <Copy className="h-3 w-3" />
+                <span>Copy</span>
+              </>
+            )}
           </button>
         </div>
         <div
-          className="[&_pre]:rounded-lg [&_pre]:p-4 [&_pre]:overflow-x-auto [&_pre]:text-sm [&_pre]:leading-relaxed"
+          className="[&_pre]:!bg-transparent [&_pre]:!p-5 [&_pre]:!m-0 [&_pre]:overflow-x-auto [&_pre]:text-[13px] [&_pre]:leading-[1.7] [&_code]:block [&_code]:font-mono"
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </div>
@@ -56,9 +76,21 @@ function CodeBlock({ children, className }: { children: string; className?: stri
   }
 
   return (
-    <pre className="bg-[#111] border border-white/10 rounded-lg p-4 overflow-x-auto text-sm text-[#e5e5e5] my-4">
-      <code>{children.trim()}</code>
-    </pre>
+    <div className="my-5 rounded-xl border border-white/10 bg-[#0a0a0a] overflow-hidden">
+      <div className="flex items-center gap-2 px-4 py-2.5 bg-white/[0.03] border-b border-white/5">
+        <div className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+          <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
+          <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
+        </div>
+        <span className="text-[11px] font-mono font-medium text-white/40 uppercase tracking-wider ml-1">
+          {language}
+        </span>
+      </div>
+      <pre className="!bg-transparent p-5 overflow-x-auto text-[13px] leading-[1.7] font-mono text-[#e5e5e5]">
+        <code>{children.trim()}</code>
+      </pre>
+    </div>
   )
 }
 
@@ -144,12 +176,16 @@ export function DocsMarkdownRenderer({ content, onHeadingsExtracted }: DocsMarkd
 
             if (isInternal && !isExternal && href) {
               return (
-                <Link
-                  to={href}
+                <a
+                  href={href}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    navigate(href)
+                  }}
                   className="text-white underline underline-offset-2 decoration-white/30 hover:decoration-white/60 transition-colors"
                 >
                   {children}
-                </Link>
+                </a>
               )
             }
 

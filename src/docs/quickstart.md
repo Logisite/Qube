@@ -13,7 +13,7 @@ Before you begin, make sure you have:
 
 ## Step 1: Connect Your Wallet
 
-1. Open the [Qube app](/)
+1. Open the [Qube app](/registry)
 2. Click **Connect Wallet** in the top right
 3. Select your wallet and approve the connection
 4. Make sure you are on the correct network (Sepolia or mainnet)

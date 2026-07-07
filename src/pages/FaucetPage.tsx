@@ -1,4 +1,4 @@
-import { useAccount } from "wagmi"
+import { useAccount, useSwitchChain } from "wagmi"
 import { useConnectModal } from "@rainbow-me/rainbowkit"
 import { toast } from "sonner"
 import { AlertTriangle } from "lucide-react"
@@ -13,6 +13,7 @@ import { TokenClaimRow } from "@/components/faucet/TokenClaimRow"
 export function FaucetPage() {
   const { isConnected, chainId } = useAccount()
   const { openConnectModal } = useConnectModal()
+  const { switchChain, isPending: isSwitching } = useSwitchChain()
   const { mint, mintAll, isPending, currentIndex } = useFaucet()
   const { balances, refetch: refetchBalances } = useAllTokenBalances()
 
@@ -51,6 +52,14 @@ export function FaucetPage() {
             <p className="text-sm text-muted-foreground max-w-sm">
               The faucet only works on testnet. Switch to Sepolia to claim free test tokens.
             </p>
+            <Button
+              onClick={() => switchChain({ chainId: 11155111 })}
+              disabled={isSwitching}
+              size="sm"
+              variant="outline"
+            >
+              {isSwitching ? "Switching..." : "Switch to Sepolia"}
+            </Button>
           </div>
         </div>
       </div>

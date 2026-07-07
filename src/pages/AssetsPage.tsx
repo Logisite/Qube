@@ -1,9 +1,10 @@
 import { useState, useCallback } from "react"
 import { useAccount } from "wagmi"
 import { useConnectModal } from "@rainbow-me/rainbowkit"
-import { Loader2, Rocket, Unlock, Lock, History } from "lucide-react"
+import { Loader2, Rocket, Unlock, Lock, History, AlertTriangle } from "lucide-react"
 import { toast } from "sonner"
 import { getTokenPairsForChain } from "@/lib/tokens"
+import { isSupportedChain } from "@/lib/chains"
 import { useFaucet } from "@/hooks/useFaucet"
 import { useAllTokenBalances } from "@/hooks/useAllTokenBalances"
 import { Button } from "@/components/ui/button"
@@ -63,6 +64,16 @@ export function AssetsPage() {
             Connect your wallet to view assets.
           </p>
         </div>
+      ) : !isSupportedChain(chainId) ? (
+        <div className="flex items-center gap-3 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4">
+          <AlertTriangle className="size-5 text-yellow-500 shrink-0" />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-foreground">Unsupported Network</p>
+            <p className="text-xs text-muted-foreground">
+              Connect to Sepolia or Ethereum mainnet to view assets.
+            </p>
+          </div>
+        </div>
       ) : (
         <div className="flex gap-4 items-start">
           <nav
@@ -95,14 +106,14 @@ export function AssetsPage() {
               <>
                 <div className="flex items-center justify-between">
                   <h2 className="text-lg font-medium text-card-foreground">Standard Assets</h2>
-                  <Button onClick={handleMintAll} disabled={isPending} size="sm">
-                    {isPending ? (
-                      <Loader2 className="size-3.5 animate-spin" />
-                    ) : (
-                      <Rocket className="size-3.5" />
-                    )}
-                    {isPending ? "Minting..." : "Top Up All"}
-                  </Button>
+                   <Button onClick={handleMintAll} disabled={isPending} size="sm">
+                     {isPending ? (
+                       <Loader2 className="size-3.5 animate-spin" />
+                     ) : (
+                       <Rocket className="size-3.5" />
+                     )}
+                     {isPending ? "Minting..." : "Top Up All"}
+                   </Button>
                 </div>
                 <p className="text-sm text-muted-foreground">
                   Public ERC-20 tokens. Claim from the faucet, then wrap into confidential equivalents.

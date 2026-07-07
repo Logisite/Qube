@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 import { useNavigate } from "react-router"
 import { Search, X } from "lucide-react"
 import { getAllDocPages, type DocPage } from "@/lib/docs"
@@ -8,12 +8,13 @@ interface DocsSearchProps {
   onClose: () => void
 }
 
+const ALL_PAGES = getAllDocPages()
+
 export function DocsSearch({ isOpen, onClose }: DocsSearchProps) {
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<DocPage[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
-  const allPages = getAllDocPages()
 
   useEffect(() => {
     if (isOpen) {
@@ -30,14 +31,14 @@ export function DocsSearch({ isOpen, onClose }: DocsSearchProps) {
     }
 
     const lower = query.toLowerCase()
-    const filtered = allPages.filter(
+    const filtered = ALL_PAGES.filter(
       (page) =>
         page.title.toLowerCase().includes(lower) ||
         page.description.toLowerCase().includes(lower) ||
         page.slug.toLowerCase().includes(lower)
     )
     setResults(filtered)
-  }, [query, allPages])
+  }, [query])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

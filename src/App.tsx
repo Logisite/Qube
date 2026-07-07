@@ -14,7 +14,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<RegistryPage />} />
           <Route path="/registry" element={<RegistryPage />} />
           <Route path="/faucet" element={<FaucetPage />} />
           <Route path="/wrap" element={<WrapPage />} />

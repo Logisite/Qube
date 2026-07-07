@@ -52,7 +52,7 @@ export function DocsPage() {
     loader()
       .then((raw) => {
         // Strip frontmatter
-        const frontmatterRegex = /^---\n[\s\S]*?\n---\n/
+        const frontmatterRegex = /^---\r?\n[\s\S]*?\r?\n---\r?\n/
         const cleanContent = raw.replace(frontmatterRegex, "")
         setContent(cleanContent)
         setLoading(false)

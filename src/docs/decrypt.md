@@ -85,6 +85,6 @@ To force a refresh, click **Decrypt** again.
 
 ## Related
 
-- [Assets Page](/docs/assets) for managing your balances
+- [Assets Page](/assets) for managing your balances
 - [Zama Encrypt & Decrypt Guide](https://docs.zama.org/protocol/sdk/guides/encrypt-decrypt) for more details
 - [Zama User Decryption](https://docs.zama.org/protocol/relayer-sdk-guides/fhevm-relayer/decryption/user-decryption) for the full specification

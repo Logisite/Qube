@@ -77,7 +77,7 @@ export function DocsLayout() {
         <main className="flex-1 min-w-0">
           <div className="max-w-[768px] mx-auto px-6 md:px-10 py-10">
             {doc && <DocsBreadcrumbs currentTitle={doc.title} />}
-            <Outlet context={{ headings, setHeadings }} />
+            <Outlet key={slug} context={{ headings, setHeadings }} />
             <DocsPrevNext currentSlug={slug} />
           </div>
         </main>
