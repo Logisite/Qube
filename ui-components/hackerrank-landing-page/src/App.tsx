@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from 'motion/react';
-import { Bot, Award, CheckCircle2, Sparkles, Check, Terminal, Users, Zap, ExternalLink } from 'lucide-react';
+import { Bot, Award, Sparkles, Check, Terminal, Users, Zap, ExternalLink } from 'lucide-react';
 
 // Fingerprint Icon (flat, clean, crisp green matching the video)
 const FingerprintIcon = () => (

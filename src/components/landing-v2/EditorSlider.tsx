@@ -36,7 +36,7 @@ export function EditorSlider({ label, value, min, max, step, unit, onChange, dif
       const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width))
       return clampToStep(min + ratio * (max - min))
     },
-    [min, max, step, value, clampToStep],
+    [min, max, value, clampToStep],
   )
 
   const handleThumbPointerDown = useCallback(
