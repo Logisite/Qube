@@ -33,110 +33,75 @@ export function useScrollSection(sectionId: string): ScrollSectionResult {
   const middleAnim = config.middleSectionAnimation
   const lastAnim = config.lastSectionAnimation
 
-  const y = isFirst
-    ? useTransform(
-        smoothProgress,
-        [start, start + firstAnim.y.enterDuration, end],
-        ["0vh", "0vh", `${firstAnim.y.exitValue}vh`],
-        { clamp: true },
-      )
+  const yInput = isFirst
+    ? [start, start + firstAnim.y.enterDuration, end]
     : isLast
-      ? useTransform(
-          smoothProgress,
-          [start, start + lastAnim.y.enterDuration],
-          ["100vh", "0vh"],
-          { clamp: true },
-        )
-      : useTransform(
-          smoothProgress,
-          [start, start + middleAnim.y.enterDuration, end - middleAnim.y.exitStartOffset, end],
-          ["100vh", "0vh", "0vh", `${middleAnim.y.exitValue}vh`],
-          { clamp: true },
-        )
+      ? [start, start + lastAnim.y.enterDuration]
+      : [start, start + middleAnim.y.enterDuration, end - middleAnim.y.exitStartOffset, end]
 
-  const scale = isFirst
-    ? useTransform(
-        smoothProgress,
-        [start, start + firstAnim.scale.enterDuration, end],
-        [firstAnim.scale.startValue, firstAnim.scale.midValue, firstAnim.scale.exitValue],
-        { clamp: true },
-      )
+  const yOutput = isFirst
+    ? ["0vh", "0vh", `${firstAnim.y.exitValue}vh`]
     : isLast
-      ? useTransform(
-          smoothProgress,
-          [start, start + lastAnim.scale.enterDuration],
-          [lastAnim.scale.enterValue, 1],
-          { clamp: true },
-        )
-      : useTransform(
-          smoothProgress,
-          [start, start + middleAnim.scale.enterDuration, end - middleAnim.scale.exitStartOffset, end],
-          [middleAnim.scale.enterValue, 1, 1, middleAnim.scale.exitValue],
-          { clamp: true },
-        )
+      ? ["100vh", "0vh"]
+      : ["100vh", "0vh", "0vh", `${middleAnim.y.exitValue}vh`]
 
-  const opacity = isFirst
-    ? useTransform(
-        smoothProgress,
-        [start, start + firstAnim.opacity.enterDuration, end],
-        [firstAnim.opacity.startValue, firstAnim.opacity.startValue, firstAnim.opacity.exitValue],
-        { clamp: true },
-      )
-    : isLast
-      ? useTransform(
-          smoothProgress,
-          [start, start + lastAnim.opacity.enterDuration],
-          [0, 1],
-          { clamp: true },
-        )
-      : useTransform(
-          smoothProgress,
-          [start, start + middleAnim.opacity.enterDuration, end - middleAnim.opacity.exitStartOffset, end],
-          [0, 1, 1, middleAnim.opacity.exitValue],
-          { clamp: true },
-        )
+  const y = useTransform(smoothProgress, yInput, yOutput, { clamp: true })
 
-  const blur = isFirst
-    ? useTransform(
-        smoothProgress,
-        [start + firstAnim.blur.startOffset, end],
-        [0, firstAnim.blur.maxValue],
-        { clamp: true },
-      )
+  const scaleInput = isFirst
+    ? [start, start + firstAnim.scale.enterDuration, end]
     : isLast
-      ? useTransform(
-          smoothProgress,
-          [start, start],
-          [0, 0],
-          { clamp: true },
-        )
-      : useTransform(
-          smoothProgress,
-          [end - middleAnim.blur.endOffset, end],
-          [0, middleAnim.blur.maxValue],
-          { clamp: true },
-        )
+      ? [start, start + lastAnim.scale.enterDuration]
+      : [start, start + middleAnim.scale.enterDuration, end - middleAnim.scale.exitStartOffset, end]
 
-  const borderRadius = isFirst
-    ? useTransform(
-        smoothProgress,
-        [start + firstAnim.borderRadius.startOffset, start + firstAnim.borderRadius.endOffset],
-        [`${firstAnim.borderRadius.startValue}px`, `${firstAnim.borderRadius.endValue}px`],
-        { clamp: true },
-      )
+  const scaleOutput = isFirst
+    ? [firstAnim.scale.startValue, firstAnim.scale.midValue, firstAnim.scale.exitValue]
     : isLast
-      ? useTransform(
-          smoothProgress,
-          [start, start],
-          [`${lastAnim.borderRadius.value}px`, `${lastAnim.borderRadius.value}px`],
-          { clamp: true },
-        )
-      : useTransform(
-          smoothProgress,
-          [start + middleAnim.borderRadius.startOffset, start + middleAnim.borderRadius.endOffset],
-          [`${middleAnim.borderRadius.value}px`, `${middleAnim.borderRadius.value}px`],
-          { clamp: true },
-        )
+      ? [lastAnim.scale.enterValue, 1]
+      : [middleAnim.scale.enterValue, 1, 1, middleAnim.scale.exitValue]
+
+  const scale = useTransform(smoothProgress, scaleInput, scaleOutput, { clamp: true })
+
+  const opacityInput = isFirst
+    ? [start, start + firstAnim.opacity.enterDuration, end]
+    : isLast
+      ? [start, start + lastAnim.opacity.enterDuration]
+      : [start, start + middleAnim.opacity.enterDuration, end - middleAnim.opacity.exitStartOffset, end]
+
+  const opacityOutput = isFirst
+    ? [firstAnim.opacity.startValue, firstAnim.opacity.startValue, firstAnim.opacity.exitValue]
+    : isLast
+      ? [0, 1]
+      : [0, 1, 1, middleAnim.opacity.exitValue]
+
+  const opacity = useTransform(smoothProgress, opacityInput, opacityOutput, { clamp: true })
+
+  const blurInput = isFirst
+    ? [start + firstAnim.blur.startOffset, end]
+    : isLast
+      ? [start, start]
+      : [end - middleAnim.blur.endOffset, end]
+
+  const blurOutput = isFirst
+    ? [0, firstAnim.blur.maxValue]
+    : isLast
+      ? [0, 0]
+      : [0, middleAnim.blur.maxValue]
+
+  const blur = useTransform(smoothProgress, blurInput, blurOutput, { clamp: true })
+
+  const borderRadiusInput = isFirst
+    ? [start + firstAnim.borderRadius.startOffset, start + firstAnim.borderRadius.endOffset]
+    : isLast
+      ? [start, start]
+      : [start + middleAnim.borderRadius.startOffset, start + middleAnim.borderRadius.endOffset]
+
+  const borderRadiusOutput = isFirst
+    ? [`${firstAnim.borderRadius.startValue}px`, `${firstAnim.borderRadius.endValue}px`]
+    : isLast
+      ? [`${lastAnim.borderRadius.value}px`, `${lastAnim.borderRadius.value}px`]
+      : [`${middleAnim.borderRadius.value}px`, `${middleAnim.borderRadius.value}px`]
+
+  const borderRadius = useTransform(smoothProgress, borderRadiusInput, borderRadiusOutput, { clamp: true })
 
   return { y, scale, opacity, blur, borderRadius, progress: smoothProgress }
 }
