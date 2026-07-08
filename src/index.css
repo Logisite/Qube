@@ -273,97 +273,61 @@
   animation: scaleToggleV2 440ms ease;
 }
 
-/* Assets toggle — horizontal black + green switch */
-.assets-toggle {
+/* Assets segmented control — 3-option switch */
+.assets-segmented {
   position: relative;
   display: inline-flex;
-  background: #000;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: oklch(0.14 0 0);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 10px;
   padding: 3px;
-  gap: 2px;
+  gap: 0;
   z-index: 10;
   flex-shrink: 0;
 }
 
-.assets-toggle__option {
+.assets-segmented__option {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 6px 12px;
-  border-radius: 10px;
-  font-size: 12px;
+  justify-content: center;
+  flex: 1;
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-size: 13px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.8);
   z-index: 1;
   cursor: pointer;
   transition: color 200ms;
   border: none;
   background: transparent;
+  white-space: nowrap;
 }
 
-.assets-toggle__option:first-child {
-  padding-left: 20px;
-}
-
-.assets-toggle__option:last-child {
-  padding-right: 20px;
-}
-
-.assets-toggle__track {
+.assets-segmented__track {
   position: absolute;
-  top: 4px;
-  left: 4px;
-  width: calc(50% - 5px);
-  height: calc(100% - 8px);
+  top: 3px;
+  left: 3px;
+  width: calc(50% - 2px);
+  height: calc(100% - 6px);
   background: #2ec866;
-  border-radius: 10px;
+  border-radius: 8px;
   z-index: 0;
   transition: translate 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.assets-toggle[data-active="1"] .assets-toggle__track {
+.assets-segmented[data-active="standard"] .assets-segmented__track {
   translate: 0 0;
 }
 
-.assets-toggle[data-active="2"] .assets-toggle__track {
-  translate: calc(100% + 2px) 0;
+.assets-segmented[data-active="confidential"] .assets-segmented__track {
+  translate: calc(100% + 1px) 0;
 }
 
-.assets-toggle[data-active="1"] .assets-toggle__option:first-child,
-.assets-toggle[data-active="2"] .assets-toggle__option:last-child {
+.assets-segmented[data-active="standard"] .assets-segmented__option:first-child,
+.assets-segmented[data-active="confidential"] .assets-segmented__option:last-child {
   color: #000;
-}
-
-@keyframes scaleToggle {
-  0% { scale: 1 1; }
-  50% { scale: 1.1 1; }
-  100% { scale: 1 1; }
-}
-
-@keyframes scaleToggle2 {
-  0% { scale: 1 1; }
-  50% { scale: 1.2 1; }
-  100% { scale: 1 1; }
-}
-
-@keyframes scaleToggle3 {
-  0% { scale: 1 1; }
-  50% { scale: 1.1 1; }
-  100% { scale: 1 1; }
-}
-
-@keyframes scaleToggleV {
-  0% { scale: 1 1; }
-  50% { scale: 1 1.1; }
-  100% { scale: 1 1; }
-}
-
-@keyframes scaleToggleV2 {
-  0% { scale: 1 1; }
-  50% { scale: 1 1.2; }
-  100% { scale: 1 1; }
 }
 
 /* ============================================

@@ -40,7 +40,7 @@ export function Navbar() {
           <div className="w-[3px] h-3 bg-brand-green rounded-sm" />
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8 font-semibold text-sm text-neutral-400">
+        <nav className="hidden lg:flex items-center gap-8 font-semibold text-sm text-neutral-400">
           {visibleLinks.map((link) => (
             <NavLink
               key={link.href}
@@ -58,12 +58,12 @@ export function Navbar() {
 
         <div className="flex items-center gap-2">
           {pathname !== "/" && <ChainSwitcher />}
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <ConnectButton chainStatus="none" />
           </div>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden text-white hover:text-white hover:bg-white/10">
+              <Button variant="ghost" size="icon" className="lg:hidden text-white hover:text-white hover:bg-white/10">
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
@@ -93,8 +93,7 @@ export function Navbar() {
                   </NavLink>
                 ))}
               </nav>
-              <div className="px-4 pt-4 flex items-center gap-2">
-                {pathname !== "/" && <ChainSwitcher />}
+              <div className="px-4 pt-4">
                 <ConnectButton chainStatus="none" />
               </div>
             </SheetContent>

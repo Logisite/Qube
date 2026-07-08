@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react"
 import { useAccount } from "wagmi"
 import { useConnectModal } from "@rainbow-me/rainbowkit"
-import { Loader2, Rocket, Unlock, Lock, History, AlertTriangle } from "lucide-react"
+import { AlertTriangle } from "lucide-react"
 import { toast } from "sonner"
 import { getTokenPairsForChain } from "@/lib/tokens"
 import { isSupportedChain } from "@/lib/chains"
@@ -12,10 +12,9 @@ import { saveActivity } from "./assets/activity"
 import { StandardAssetRow } from "./assets/StandardAssetRow"
 import { ConfidentialAssetRow } from "./assets/ConfidentialAssetRow"
 import { DecryptAllButton } from "./assets/DecryptAllButton"
-import { ActivitySection } from "./assets/ActivitySection"
 import { CustomTokenInput } from "./assets/CustomTokenInput"
 
-type AssetView = "standard" | "confidential" | "activity"
+type AssetView = "standard" | "confidential"
 
 export function AssetsPage() {
   const { isConnected, chainId } = useAccount()
@@ -24,16 +23,6 @@ export function AssetsPage() {
   const { balances, refetch: refetchBalances } = useAllTokenBalances()
   const [view, setView] = useState<AssetView>("standard")
   const pairs = getTokenPairsForChain(chainId)
-
-  const isLocked = view === "confidential"
-
-  function togglePadlock() {
-    if (view === "activity") {
-      setView("standard")
-    } else {
-      setView(view === "standard" ? "confidential" : "standard")
-    }
-  }
 
   const handleMintAll = useCallback(async () => {
     const publicPairs = pairs.filter((p) => p.symbol.endsWith("Mock"))
@@ -48,66 +37,38 @@ export function AssetsPage() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-3.5rem)]">
-      {/* Fixed header — never scrolls */}
-      <div className="shrink-0 text-center pt-4 pb-2">
-        <div className="max-w-2xl mx-auto px-4">
-          <h1 className="text-2xl font-bold text-card-foreground">Assets</h1>
-          <p className="text-xs text-muted-foreground">
-            Your tokens, balances, and actions.
-          </p>
-        </div>
-      </div>
-
-      {/* Fixed toggle bar — never scrolls */}
+      {/* Fixed segmented control bar — never scrolls */}
       <div className="shrink-0 px-4 pb-3">
-        <div className="max-w-2xl mx-auto">
-          {!isConnected ? null : !isSupportedChain(chainId) ? null : (
-            <div className="flex items-center gap-3">
-              <nav
-                className="assets-toggle"
-                data-active={view === "activity" ? "2" : "1"}
+        {!isConnected ? null : !isSupportedChain(chainId) ? null : (
+          <div className="flex items-center">
+            <div className="flex-1" />
+            <nav className="assets-segmented" data-active={view}>
+              <div className="assets-segmented__track" />
+              <button
+                type="button"
+                onClick={() => setView("standard")}
+                className="assets-segmented__option"
               >
-                <div className="assets-toggle__track" />
-                <button
-                  type="button"
-                  onClick={togglePadlock}
-                  className="assets-toggle__option"
-                  aria-label={isLocked ? "Switch to Standard" : "Switch to Confidential"}
-                >
-                  {isLocked ? <Lock className="size-3.5" /> : <Unlock className="size-3.5" />}
-                  <span>Lock</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setView("activity")}
-                  className="assets-toggle__option"
-                  aria-label="Activity"
-                >
-                  <History className="size-3.5" />
-                  <span>History</span>
-                </button>
-              </nav>
-              <span className="text-sm font-medium text-card-foreground">
-                {view === "standard" && "Standard Assets"}
-                {view === "confidential" && "Confidential Assets"}
-                {view === "activity" && "Activity"}
-              </span>
-              <div className="ml-auto">
-                {view === "standard" && (
-                  <Button onClick={handleMintAll} disabled={isPending} size="sm">
-                    {isPending ? (
-                      <Loader2 className="size-3.5 animate-spin" />
-                    ) : (
-                      <Rocket className="size-3.5" />
-                    )}
-                    {isPending ? "Minting..." : "Top Up All"}
-                  </Button>
-                )}
-                {view === "confidential" && <DecryptAllButton />}
-              </div>
+                Standard
+              </button>
+              <button
+                type="button"
+                onClick={() => setView("confidential")}
+                className="assets-segmented__option"
+              >
+                Confidential
+              </button>
+            </nav>
+            <div className="flex-1 flex justify-end">
+              {view === "standard" && (
+                <Button onClick={handleMintAll} disabled={isPending} size="sm">
+                  {isPending ? "Minting..." : "Top Up All"}
+                </Button>
+              )}
+              {view === "confidential" && <DecryptAllButton />}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Scrollable rows — only this scrolls */}
@@ -150,9 +111,7 @@ export function AssetsPage() {
                   pair={pair}
                 />
               ))}
-              {view === "activity" && <ActivitySection />}
 
-              {/* Track Other Token — only in confidential view */}
               {view === "confidential" && (
                 <div className="mt-8 space-y-3">
                   <h3 className="text-sm font-medium text-card-foreground">Track Other Token</h3>

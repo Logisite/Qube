@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router"
 import { Layout } from "./components/layout/Layout"
 import { DocsLayout } from "./components/docs/DocsLayout"
-import { AnimationConfigProvider } from "./components/landing-v2/AnimationConfigContext"
 
 import { RegistryPage } from "./pages/RegistryPage"
 import { FaucetPage } from "./pages/FaucetPage"
@@ -15,7 +14,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<AnimationConfigProvider><LandingPage /></AnimationConfigProvider>} />
+        <Route path="/" element={<LandingPage />} />
         <Route element={<Layout />}>
           <Route path="/registry" element={<RegistryPage />} />
           <Route path="/faucet" element={<FaucetPage />} />
