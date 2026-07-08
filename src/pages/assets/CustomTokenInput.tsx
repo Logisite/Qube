@@ -3,34 +3,55 @@ import { isAddress } from "viem"
 import { DecryptBalanceButton } from "@/components/decrypt/DecryptBalanceButton"
 import { Button } from "@/components/ui/button"
 
+interface CustomTokenEntry {
+  address: `0x${string}`
+  decimals: number
+}
+
+function loadTokens(): CustomTokenEntry[] {
+  try {
+    const raw = localStorage.getItem("assets-custom-tokens")
+    if (!raw) return []
+    return JSON.parse(raw) as CustomTokenEntry[]
+  } catch {
+    return []
+  }
+}
+
+function saveTokens(tokens: CustomTokenEntry[]): void {
+  localStorage.setItem("assets-custom-tokens", JSON.stringify(tokens))
+}
+
 export function CustomTokenInput() {
   const [inputValue, setInputValue] = useState("")
   const [decimals, setDecimals] = useState("18")
-  const [customAddresses, setCustomAddresses] = useState<`0x${string}`[]>(() => {
-    try {
-      const raw = localStorage.getItem("assets-custom-tokens")
-      if (!raw) return []
-      return JSON.parse(raw) as `0x${string}`[]
-    } catch {
-      return []
-    }
-  })
+  const [customTokens, setCustomTokens] = useState<CustomTokenEntry[]>(loadTokens)
 
   function handleAdd() {
     if (!isAddress(inputValue)) return
     const addr = inputValue as `0x${string}`
-    if (!customAddresses.includes(addr)) {
-      const next = [...customAddresses, addr]
-      setCustomAddresses(next)
-      localStorage.setItem("assets-custom-tokens", JSON.stringify(next))
+    if (!customTokens.some((t) => t.address === addr)) {
+      const next = [...customTokens, { address: addr, decimals: Number(decimals) || 18 }]
+      setCustomTokens(next)
+      saveTokens(next)
     }
     setInputValue("")
   }
 
   function handleRemove(addr: `0x${string}`) {
-    const next = customAddresses.filter((a) => a !== addr)
-    setCustomAddresses(next)
-    localStorage.setItem("assets-custom-tokens", JSON.stringify(next))
+    const next = customTokens.filter((t) => t.address !== addr)
+    setCustomTokens(next)
+    saveTokens(next)
+  }
+
+  function handleDecimalsChange(addr: `0x${string}`, newDecimals: string) {
+    const parsed = Number(newDecimals)
+    if (isNaN(parsed) || parsed < 0 || parsed > 36) return
+    const next = customTokens.map((t) =>
+      t.address === addr ? { ...t, decimals: parsed } : t,
+    )
+    setCustomTokens(next)
+    saveTokens(next)
   }
 
   return (
@@ -58,26 +79,34 @@ export function CustomTokenInput() {
         </Button>
       </div>
 
-      {customAddresses.length > 0 && (
+      {customTokens.length > 0 && (
         <div className="space-y-2">
-          {customAddresses.map((addr) => (
+          {customTokens.map((token) => (
             <div
-              key={addr}
+              key={token.address}
               className="flex items-center justify-between gap-4 rounded-xl border border-border bg-card px-4 py-3"
             >
-              <div className="min-w-0">
-                <p className="font-mono text-sm text-card-foreground truncate">{addr}</p>
+              <div className="min-w-0 flex-1">
+                <p className="font-mono text-sm text-card-foreground truncate">{token.address}</p>
+                <input
+                  type="number"
+                  min="0"
+                  max="36"
+                  value={token.decimals}
+                  onChange={(e) => handleDecimalsChange(token.address, e.target.value)}
+                  className="mt-1 w-20 rounded-md bg-background border border-border px-2 py-1 text-xs text-foreground"
+                />
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <DecryptBalanceButton
-                  wrapperAddress={addr}
-                  decimals={Number(decimals) || 18}
+                  wrapperAddress={token.address}
+                  decimals={token.decimals}
                   displayName="Custom"
                 />
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => handleRemove(addr)}
+                  onClick={() => handleRemove(token.address)}
                 >
                   Remove
                 </Button>

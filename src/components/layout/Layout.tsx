@@ -25,17 +25,17 @@ export function Layout() {
   }, [pathname])
 
   return (
-    <div id="smooth-wrapper">
-      <div id="smooth-content">
-        <div className="min-h-screen flex flex-col">
-          <GlassFilterSvg />
-          <Navbar />
-          <main className="flex-1 pt-16">
+    <>
+      <GlassFilterSvg />
+      <Navbar />
+      <div id="smooth-wrapper">
+        <div id="smooth-content">
+          <main className="min-h-screen flex-1 pt-16">
             <Outlet />
           </main>
-          <Toaster />
         </div>
       </div>
-    </div>
+      <Toaster />
+    </>
   )
 }

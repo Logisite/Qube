@@ -11,12 +11,6 @@
       "rules": {
         "react/only-export-components": "off"
       }
-    },
-    {
-      "files": ["src/components/landing-v2/AnimationConfigContext.tsx"],
-      "rules": {
-        "react/only-export-components": "off"
-      }
     }
   ]
 }

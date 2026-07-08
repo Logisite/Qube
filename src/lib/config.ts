@@ -56,23 +56,3 @@ export const ERC20_ABI = [
     type: "function",
   },
 ] as const
-
-export const REGISTRY_ABI = [
-  {
-    inputs: [],
-    name: "getTokenConfidentialTokenPairs",
-    outputs: [
-      {
-        components: [
-          { name: "symbol", type: "string" },
-          { name: "name", type: "string" },
-          { name: "erc20", type: "address" },
-          { name: "erc7984", type: "address" },
-        ],
-        type: "tuple[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-] as const

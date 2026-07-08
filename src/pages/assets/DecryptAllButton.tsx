@@ -1,43 +1,61 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAccount } from "wagmi"
 import { formatUnits } from "viem"
-import { Loader2 } from "lucide-react"
+import { Loader2, Eye } from "lucide-react"
 import { toast } from "sonner"
+import { SigningRejectedError } from "@zama-fhe/react-sdk"
 import { getTokenPairsForChain } from "@/lib/tokens"
-import { useDecryptBalances } from "@/hooks/useDecrypt"
+import { useDecryptAllow, useDecryptBalances } from "@/hooks/useDecrypt"
 import { Button } from "@/components/ui/button"
 import { saveActivity } from "./activity"
 
 export function DecryptAllButton() {
   const { chainId } = useAccount()
   const pairs = getTokenPairsForChain(chainId)
-  const [decrypted, setDecrypted] = useState(false)
+  const addresses = pairs.map((p) => p.erc7984.address)
+  const [phase, setPhase] = useState<"idle" | "authorizing" | "decrypting" | "done">("idle")
+  const [queryEnabled, setQueryEnabled] = useState(false)
   const [batchResult, setBatchResult] = useState<{
     results: Map<string, bigint>
     errors: Map<string, Error>
   } | null>(null)
-  const addresses = pairs.map((p) => p.erc7984.address)
-  const { isLoading, refetch } = useDecryptBalances(addresses, false)
+  const { allow } = useDecryptAllow()
+  const { data, isLoading } = useDecryptBalances(addresses, queryEnabled)
+
+  useEffect(() => {
+    if (data && phase === "decrypting") {
+      setBatchResult(data)
+      setPhase("done")
+      saveActivity({ type: "decrypt", token: "All tokens", timestamp: Date.now() })
+    }
+  }, [data, phase])
 
   async function handleDecryptAll() {
-    if (decrypted) {
-      setDecrypted(false)
+    if (phase === "done") {
+      setPhase("idle")
+      setQueryEnabled(false)
       setBatchResult(null)
       return
     }
+
+    setPhase("authorizing")
     try {
-      const result = await refetch()
-      if (result.data) {
-        setBatchResult(result.data)
-        setDecrypted(true)
-        saveActivity({ type: "decrypt", token: "All tokens", timestamp: Date.now() })
+      await allow(addresses)
+    } catch (err) {
+      if (err instanceof SigningRejectedError) {
+        toast.info("Authorization rejected")
+      } else {
+        toast.error("Authorization failed")
       }
-    } catch {
-      toast.error("Batch decryption failed try individual decryption")
+      setPhase("idle")
+      return
     }
+
+    setPhase("decrypting")
+    setQueryEnabled(true)
   }
 
-  if (decrypted && batchResult) {
+  if (phase === "done" && batchResult) {
     return (
       <div className="space-y-3">
         <Button variant="outline" size="sm" onClick={handleDecryptAll}>
@@ -71,9 +89,12 @@ export function DecryptAllButton() {
   }
 
   return (
-    <Button variant="outline" size="sm" onClick={handleDecryptAll} disabled={isLoading}>
-      {isLoading ? <Loader2 className="size-3.5 animate-spin" /> : null}
-      {isLoading ? "Decrypting..." : "Decrypt All"}
+    <Button variant="outline" size="sm" onClick={handleDecryptAll} disabled={isLoading || phase === "authorizing"}>
+      {isLoading || phase !== "idle" ? <Loader2 className="size-3.5 animate-spin" /> : <Eye className="size-3.5" />}
+      {phase === "authorizing" ? "Authorizing..."
+        : phase === "decrypting" ? "Decrypting..."
+        : phase === "done" ? "Hide All Balances"
+        : "Decrypt All"}
     </Button>
   )
 }
