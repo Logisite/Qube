@@ -47,128 +47,125 @@ export function AssetsPage() {
   }, [mintAll, pairs])
 
   return (
-    <div className="relative mx-auto max-w-2xl px-4 py-12">
-      <div className="text-center space-y-2 mb-8">
-        <h1 className="text-3xl font-bold text-card-foreground">Assets</h1>
-        <p className="text-muted-foreground">
-          Your tokens, balances, and actions.
-        </p>
-      </div>
-
-      {!isConnected ? (
-        <div className="flex flex-col items-center gap-3 py-16 text-center">
-          <Button onClick={openConnectModal} variant="outline" size="sm">
-            Connect Wallet
-          </Button>
-          <p className="text-sm text-muted-foreground">
-            Connect your wallet to view assets.
+    <div className="flex flex-col h-[calc(100vh-3.5rem)]">
+      {/* Fixed header — never scrolls */}
+      <div className="shrink-0 text-center pt-4 pb-2">
+        <div className="max-w-2xl mx-auto px-4">
+          <h1 className="text-2xl font-bold text-card-foreground">Assets</h1>
+          <p className="text-xs text-muted-foreground">
+            Your tokens, balances, and actions.
           </p>
         </div>
-      ) : !isSupportedChain(chainId) ? (
-        <div className="flex items-center gap-3 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4">
-          <AlertTriangle className="size-5 text-yellow-500 shrink-0" />
-          <div className="flex-1">
-            <p className="text-sm font-medium text-foreground">Unsupported Network</p>
-            <p className="text-xs text-muted-foreground">
-              Connect to Sepolia or Ethereum mainnet to view assets.
-            </p>
-          </div>
+      </div>
+
+      {/* Fixed toggle bar — never scrolls */}
+      <div className="shrink-0 px-4 pb-3">
+        <div className="max-w-2xl mx-auto">
+          {!isConnected ? null : !isSupportedChain(chainId) ? null : (
+            <div className="flex items-center gap-3">
+              <nav
+                className="assets-toggle"
+                data-active={view === "activity" ? "2" : "1"}
+              >
+                <div className="assets-toggle__track" />
+                <button
+                  type="button"
+                  onClick={togglePadlock}
+                  className="assets-toggle__option"
+                  aria-label={isLocked ? "Switch to Standard" : "Switch to Confidential"}
+                >
+                  {isLocked ? <Lock className="size-3.5" /> : <Unlock className="size-3.5" />}
+                  <span>Lock</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setView("activity")}
+                  className="assets-toggle__option"
+                  aria-label="Activity"
+                >
+                  <History className="size-3.5" />
+                  <span>History</span>
+                </button>
+              </nav>
+              <span className="text-sm font-medium text-card-foreground">
+                {view === "standard" && "Standard Assets"}
+                {view === "confidential" && "Confidential Assets"}
+                {view === "activity" && "Activity"}
+              </span>
+              <div className="ml-auto">
+                {view === "standard" && (
+                  <Button onClick={handleMintAll} disabled={isPending} size="sm">
+                    {isPending ? (
+                      <Loader2 className="size-3.5 animate-spin" />
+                    ) : (
+                      <Rocket className="size-3.5" />
+                    )}
+                    {isPending ? "Minting..." : "Top Up All"}
+                  </Button>
+                )}
+                {view === "confidential" && <DecryptAllButton />}
+              </div>
+            </div>
+          )}
         </div>
-      ) : (
-        <div className="flex gap-4 items-start">
-          <nav
-            className="glass-pill glass-pill--vertical sticky top-20 z-10 self-start"
-            data-active={view === "activity" ? "2" : "1"}
-          >
-            <div className="glass-pill__track" />
-            <button
-              type="button"
-              onClick={togglePadlock}
-              className="glass-pill__option"
-              style={{ color: view !== "activity" ? "var(--foreground)" : "var(--muted-foreground)" }}
-              aria-label={isLocked ? "Switch to Standard" : "Switch to Confidential"}
-            >
-              {isLocked ? <Lock className="size-4" /> : <Unlock className="size-4" />}
-            </button>
-            <button
-              type="button"
-              onClick={() => setView("activity")}
-              className="glass-pill__option"
-              style={{ color: view === "activity" ? "var(--foreground)" : "var(--muted-foreground)" }}
-              aria-label="Activity"
-            >
-              <History className="size-4" />
-            </button>
-          </nav>
+      </div>
 
-          <div className="flex-1 min-w-0 space-y-4">
-            {view === "standard" && (
-              <>
-                <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-medium text-card-foreground">Standard Assets</h2>
-                   <Button onClick={handleMintAll} disabled={isPending} size="sm">
-                     {isPending ? (
-                       <Loader2 className="size-3.5 animate-spin" />
-                     ) : (
-                       <Rocket className="size-3.5" />
-                     )}
-                     {isPending ? "Minting..." : "Top Up All"}
-                   </Button>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Public ERC-20 tokens. Claim from the faucet, then wrap into confidential equivalents.
+      {/* Scrollable rows — only this scrolls */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-8">
+        <div className="max-w-2xl mx-auto">
+          {!isConnected ? (
+            <div className="flex flex-col items-center gap-3 py-16 text-center">
+              <Button onClick={openConnectModal} variant="outline" size="sm">
+                Connect Wallet
+              </Button>
+              <p className="text-sm text-muted-foreground">
+                Connect your wallet to view assets.
+              </p>
+            </div>
+          ) : !isSupportedChain(chainId) ? (
+            <div className="flex items-center gap-3 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4">
+              <AlertTriangle className="size-5 text-yellow-500 shrink-0" />
+              <div className="flex-1">
+                <p className="text-sm font-medium text-foreground">Unsupported Network</p>
+                <p className="text-xs text-muted-foreground">
+                  Connect to Sepolia or Ethereum mainnet to view assets.
                 </p>
-                <div className="space-y-2">
-                  {pairs.map((pair) => (
-                    <StandardAssetRow
-                      key={pair.erc20.address}
-                      pair={pair}
-                      isPending={isPending}
-                      onMint={mint}
-                      balance={balances.get(pair.erc20.address)}
-                      onRefetch={refetchBalances}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-1">
+              {view === "standard" && pairs.map((pair) => (
+                <StandardAssetRow
+                  key={pair.erc20.address}
+                  pair={pair}
+                  isPending={isPending}
+                  onMint={mint}
+                  balance={balances.get(pair.erc20.address)}
+                  onRefetch={refetchBalances}
+                />
+              ))}
+              {view === "confidential" && pairs.map((pair) => (
+                <ConfidentialAssetRow
+                  key={pair.erc7984.address}
+                  pair={pair}
+                />
+              ))}
+              {view === "activity" && <ActivitySection />}
 
-            {view === "confidential" && (
-              <>
-                <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-medium text-card-foreground">Confidential Assets</h2>
-                  <DecryptAllButton />
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Encrypted ERC-7984 balances. Decrypt to view, unwrap to convert back.
-                </p>
-                <div className="space-y-2">
-                  {pairs.map((pair) => (
-                    <ConfidentialAssetRow
-                      key={pair.erc7984.address}
-                      pair={pair}
-                    />
-                  ))}
-                </div>
-                <div className="rounded-xl border border-border bg-card p-4 space-y-3">
+              {/* Track Other Token — only in confidential view */}
+              {view === "confidential" && (
+                <div className="mt-8 space-y-3">
                   <h3 className="text-sm font-medium text-card-foreground">Track Other Token</h3>
                   <p className="text-xs text-muted-foreground">
                     Decrypt any ERC-7984 token, even outside the registry.
                   </p>
                   <CustomTokenInput />
                 </div>
-              </>
-            )}
-
-            {view === "activity" && (
-              <>
-                <h2 className="text-lg font-medium text-card-foreground">Activity</h2>
-                <ActivitySection />
-              </>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   )
 }

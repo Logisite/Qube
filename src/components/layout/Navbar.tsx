@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { NavLink, Link } from "react-router"
+import { NavLink, Link, useLocation } from "react-router"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { Shield, Menu } from "lucide-react"
 import { navLinks } from "@/lib/nav"
@@ -19,6 +19,7 @@ import logoWhite from "@/assets/logos/logo-white.svg"
 export function Navbar() {
   const [open, setOpen] = useState(false)
   const { chainId } = useAccount()
+  const { pathname } = useLocation()
   const onTestnet = isTestnet(chainId)
   const visibleLinks = onTestnet
     ? navLinks
@@ -56,7 +57,7 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <ChainSwitcher />
+          {pathname !== "/" && <ChainSwitcher />}
           <div className="hidden md:block">
             <ConnectButton chainStatus="none" />
           </div>
@@ -93,7 +94,7 @@ export function Navbar() {
                 ))}
               </nav>
               <div className="px-4 pt-4 flex items-center gap-2">
-                <ChainSwitcher />
+                {pathname !== "/" && <ChainSwitcher />}
                 <ConnectButton chainStatus="none" />
               </div>
             </SheetContent>

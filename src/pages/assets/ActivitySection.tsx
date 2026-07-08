@@ -13,17 +13,17 @@ export function ActivitySection() {
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       {activity.slice(0, 10).map((entry, i) => (
         <div
           key={`${entry.timestamp}-${i}`}
-          className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-2"
+          className="flex items-center justify-between px-2 py-3 hover:bg-white/[0.02] rounded-lg transition-colors"
         >
           <div className="flex items-center gap-3">
-            <span className="text-xs font-medium uppercase text-muted-foreground">
+            <span className="text-xs font-medium uppercase text-muted-foreground w-16">
               {entry.type}
             </span>
-            <span className="text-sm text-card-foreground">{entry.token}</span>
+            <span className="text-sm text-card-foreground font-medium">{entry.token}</span>
             {entry.amount && (
               <span className="text-xs text-muted-foreground">{entry.amount}</span>
             )}

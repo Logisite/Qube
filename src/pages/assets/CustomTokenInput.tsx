@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 
 export function CustomTokenInput() {
   const [inputValue, setInputValue] = useState("")
+  const [decimals, setDecimals] = useState("18")
   const [customAddresses, setCustomAddresses] = useState<`0x${string}`[]>(() => {
     try {
       const raw = localStorage.getItem("assets-custom-tokens")
@@ -43,6 +44,15 @@ export function CustomTokenInput() {
           placeholder="Paste ERC-7984 wrapper address..."
           className="flex-1 rounded-md bg-background border border-border px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground font-mono"
         />
+        <input
+          type="number"
+          min="0"
+          max="36"
+          value={decimals}
+          onChange={(e) => setDecimals(e.target.value)}
+          placeholder="Decimals"
+          className="w-20 rounded-md bg-background border border-border px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground"
+        />
         <Button onClick={handleAdd} disabled={!isAddress(inputValue)}>
           Track
         </Button>
@@ -61,7 +71,7 @@ export function CustomTokenInput() {
               <div className="flex items-center gap-2 shrink-0">
                 <DecryptBalanceButton
                   wrapperAddress={addr}
-                  decimals={18}
+                  decimals={Number(decimals) || 18}
                   displayName="Custom"
                 />
                 <Button

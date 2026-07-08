@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router"
 import { Layout } from "./components/layout/Layout"
 import { DocsLayout } from "./components/docs/DocsLayout"
+import { AnimationConfigProvider } from "./components/landing-v2/AnimationConfigContext"
 
 import { RegistryPage } from "./pages/RegistryPage"
 import { FaucetPage } from "./pages/FaucetPage"
@@ -8,13 +9,14 @@ import { WrapPage } from "./pages/WrapPage"
 import { UnwrapPage } from "./pages/UnwrapPage"
 import { AssetsPage } from "./pages/AssetsPage"
 import { DocsPage } from "./pages/DocsPage"
+import { LandingPage } from "./components/landing-v2/LandingPage"
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<AnimationConfigProvider><LandingPage /></AnimationConfigProvider>} />
         <Route element={<Layout />}>
-          <Route path="/" element={<RegistryPage />} />
           <Route path="/registry" element={<RegistryPage />} />
           <Route path="/faucet" element={<FaucetPage />} />
           <Route path="/wrap" element={<WrapPage />} />

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react"
 import { useAccount, useSwitchChain } from "wagmi"
+import { useConnectModal } from "@rainbow-me/rainbowkit"
 import { toast } from "sonner"
 import { ChevronDown, Loader2, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -14,8 +15,9 @@ const chainEntries = Object.entries(SUPPORTED_CHAINS) as unknown as [
 export function ChainSwitcher() {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
-  const { chainId } = useAccount()
+  const { chainId, isConnected } = useAccount()
   const { switchChain, isPending } = useSwitchChain()
+  const { openConnectModal } = useConnectModal()
 
   const current = chainId
     ? (SUPPORTED_CHAINS[chainId as SupportedChainId] ?? SUPPORTED_CHAINS[11155111])
@@ -38,6 +40,11 @@ export function ChainSwitcher() {
       return
     }
     setOpen(false)
+    if (!isConnected) {
+      toast.error("Connect a wallet to switch networks")
+      openConnectModal?.()
+      return
+    }
     switchChain(
       { chainId: target },
       {

@@ -48,7 +48,7 @@ export function WrapForm({ pairs, initialTokenIndex = 0 }: WrapFormProps) {
     token: pair.erc20.address,
   })
 
-  const { data: confidentialBalance, refetch: refetchConfidential } = useConfidentialBalance({
+  const { refetch: refetchConfidential } = useConfidentialBalance({
     tokenAddress: pair.erc7984.address,
   })
 
@@ -158,15 +158,6 @@ export function WrapForm({ pairs, initialTokenIndex = 0 }: WrapFormProps) {
             View transaction
             <ExternalLink className="size-3.5" />
           </a>
-        )}
-
-        {confidentialBalance !== undefined && confidentialBalance > 0n && (
-          <div className="rounded-md bg-muted/50 px-3 py-2 text-sm">
-            <span className="text-muted-foreground">Your {success.symbol} balance: </span>
-            <span className="font-medium text-foreground">
-              {formatUnits(confidentialBalance, pair.erc7984.decimals)} {success.symbol}
-            </span>
-          </div>
         )}
 
         <div className="flex flex-col sm:flex-row gap-3">
@@ -284,14 +275,6 @@ export function WrapForm({ pairs, initialTokenIndex = 0 }: WrapFormProps) {
             : "Wrap"}
       </Button>
 
-      {confidentialBalance !== undefined && confidentialBalance > 0n && (
-        <div className="rounded-md bg-muted/50 px-3 py-2 text-sm">
-          <span className="text-muted-foreground">Encrypted balance: </span>
-          <span className="font-medium text-foreground">
-            {formatUnits(confidentialBalance, pair.erc7984.decimals)} {pair.symbol}
-          </span>
-        </div>
-      )}
     </div>
   )
 }
