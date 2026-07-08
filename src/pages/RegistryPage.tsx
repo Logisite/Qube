@@ -6,7 +6,7 @@ import { getTokenPairsForChain } from "@/lib/tokens"
 import { getChainConfig } from "@/lib/chains"
 import { RegistryGrid } from "@/components/registry/RegistryGrid"
 import { RegistryBanner } from "@/components/registry/RegistryBanner"
-import { WhyCanonicalPairs } from "@/components/registry/WhyCanonicalPairs"
+
 
 export function RegistryPage() {
   const { chainId } = useAccount()
@@ -35,7 +35,6 @@ export function RegistryPage() {
         isLoading={isLoading}
       />
 
-      <WhyCanonicalPairs />
     </div>
   )
 }

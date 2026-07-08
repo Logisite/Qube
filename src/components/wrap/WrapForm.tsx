@@ -105,6 +105,7 @@ export function WrapForm({ pairs, initialTokenIndex = 0 }: WrapFormProps) {
       refetchErc20()
       refetchConfidential()
     } catch (err) {
+      console.error("[Wrap] shield failed:", err)
       if (err instanceof SigningRejectedError) {
         toast.info("Transaction rejected")
       } else if (err instanceof InsufficientERC20BalanceError) {
@@ -116,7 +117,7 @@ export function WrapForm({ pairs, initialTokenIndex = 0 }: WrapFormProps) {
       } else if (err instanceof TransactionRevertedError) {
         toast.error("Transaction reverted")
       } else {
-        toast.error("Shield failed")
+        toast.error(`Shield failed: ${(err as Error).message ?? err}`)
       }
     } finally {
       setPhase("idle")

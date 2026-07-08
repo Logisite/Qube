@@ -97,6 +97,7 @@ export function UnwrapForm({ pairs, initialTokenIndex = 0 }: UnwrapFormProps) {
       refetchConfidential()
       refetchErc20()
     } catch (err) {
+      console.error("[Unwrap] unshield failed:", err)
       if (err instanceof SigningRejectedError) {
         toast.info("Transaction rejected")
       } else if (err instanceof InsufficientConfidentialBalanceError) {
@@ -110,7 +111,7 @@ export function UnwrapForm({ pairs, initialTokenIndex = 0 }: UnwrapFormProps) {
       } else if (err instanceof TransactionRevertedError) {
         toast.error("Transaction reverted")
       } else {
-        toast.error("Unshield failed")
+        toast.error(`Unshield failed: ${(err as Error).message ?? err}`)
       }
     } finally {
       setPhase("idle")
@@ -219,7 +220,7 @@ export function UnwrapForm({ pairs, initialTokenIndex = 0 }: UnwrapFormProps) {
         </div>
         {confidentialBalance !== undefined && (
           <p className="text-xs text-muted-foreground">
-            Encrypted balance: {formatUnits(confidentialBalance, pair.erc7984.decimals)} {pair.displayName}
+            Confidential balance: {formatUnits(confidentialBalance, pair.erc7984.decimals)} {pair.displayName}
           </p>
         )}
       </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useAccount } from "wagmi"
 import { formatUnits } from "viem"
 import { Loader2, Eye } from "lucide-react"
@@ -8,6 +8,9 @@ import { getTokenPairsForChain } from "@/lib/tokens"
 import { useDecryptAllow, useDecryptBalances } from "@/hooks/useDecrypt"
 import { Button } from "@/components/ui/button"
 import { saveActivity } from "./activity"
+
+const MAX_RETRIES = 5
+const RETRY_DELAY_MS = 2000
 
 export function DecryptAllButton() {
   const { chainId } = useAccount()
@@ -19,16 +22,47 @@ export function DecryptAllButton() {
     results: Map<string, bigint>
     errors: Map<string, Error>
   } | null>(null)
+  const retryCount = useRef(0)
+  const retryTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const { allow } = useDecryptAllow()
-  const { data, isLoading } = useDecryptBalances(addresses, queryEnabled)
+  const { data, isLoading, error: sdkError, refetch } = useDecryptBalances(addresses, queryEnabled)
 
   useEffect(() => {
-    if (data && phase === "decrypting") {
-      setBatchResult(data)
-      setPhase("done")
-      saveActivity({ type: "decrypt", token: "All tokens", timestamp: Date.now() })
+    return () => {
+      if (retryTimer.current) clearTimeout(retryTimer.current)
     }
-  }, [data, phase])
+  }, [])
+
+  useEffect(() => {
+    if (phase !== "decrypting") return
+    if (sdkError) {
+      console.error("[DecryptAll] SDK query error:", sdkError)
+      toast.error(`Decryption failed: ${sdkError.message}`)
+      setPhase("idle")
+      return
+    }
+    if (!data) return
+
+    const allZero = [...data.results.values()].every((v) => v === 0n)
+    const hasAnyErrors = data.errors.size > 0
+
+    if (allZero && !hasAnyErrors && retryCount.current < MAX_RETRIES) {
+      retryCount.current += 1
+      console.log(`[DecryptAll] retry ${retryCount.current}/${MAX_RETRIES}, all balances are 0n`)
+      retryTimer.current = setTimeout(async () => {
+        try {
+          await refetch()
+        } catch {
+          // errors handled by sdkError effect
+        }
+      }, RETRY_DELAY_MS)
+      return
+    }
+
+    setBatchResult(data)
+    setPhase("done")
+    saveActivity({ type: "decrypt", token: "All tokens", timestamp: Date.now() })
+  }, [data, sdkError, phase, refetch])
 
   async function handleDecryptAll() {
     if (phase === "done") {
@@ -38,10 +72,12 @@ export function DecryptAllButton() {
       return
     }
 
+    retryCount.current = 0
     setPhase("authorizing")
     try {
       await allow(addresses)
     } catch (err) {
+      console.error("[DecryptAll] allow failed:", err)
       if (err instanceof SigningRejectedError) {
         toast.info("Authorization rejected")
       } else {

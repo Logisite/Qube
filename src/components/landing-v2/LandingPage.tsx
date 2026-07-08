@@ -1,5 +1,7 @@
 import { Link } from "react-router"
 import logoWhite from "@/assets/logos/logo-white.svg"
+import { FaqSection } from "./FaqSection"
+import { Footer } from "./Footer"
 
 export function LandingPage() {
   return (
@@ -49,6 +51,9 @@ export function LandingPage() {
           </Link>
         </div>
       </section>
+
+      <FaqSection />
+      <Footer />
     </div>
   )
 }
