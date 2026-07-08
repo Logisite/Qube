@@ -3,7 +3,7 @@ import "@rainbow-me/rainbowkit/styles.css"
 import { type PropsWithChildren } from "react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { WagmiProvider } from "wagmi"
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit"
+import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit"
 import {
   ZamaProvider,
   RelayerWeb,
@@ -40,7 +40,7 @@ export function AppProviders({ children }: PropsWithChildren) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
+        <RainbowKitProvider theme={darkTheme({ accentColor: "#2ec866" })}>
           <ZamaProvider
             relayer={relayer}
             signer={signer}

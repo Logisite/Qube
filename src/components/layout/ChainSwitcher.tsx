@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from "react"
 import { useAccount, useSwitchChain } from "wagmi"
-import { useConnectModal } from "@rainbow-me/rainbowkit"
 import { toast } from "sonner"
-import { ChevronDown, Check } from "lucide-react"
+import { ChevronDown, Loader2, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { SUPPORTED_CHAINS, type SupportedChainId } from "@/lib/chains"
 import ethLogo from "@/assets/icons/ethereum-eth-logo.svg"
@@ -14,11 +13,9 @@ const chainEntries = Object.entries(SUPPORTED_CHAINS) as unknown as [
 
 export function ChainSwitcher() {
   const [open, setOpen] = useState(false)
-  const [pendingChainId, setPendingChainId] = useState<SupportedChainId | null>(null)
   const ref = useRef<HTMLDivElement>(null)
-  const { chainId, isConnected } = useAccount()
+  const { chainId } = useAccount()
   const { switchChain, isPending } = useSwitchChain()
-  const { openConnectModal } = useConnectModal()
 
   const current = chainId
     ? (SUPPORTED_CHAINS[chainId as SupportedChainId] ?? SUPPORTED_CHAINS[11155111])
@@ -35,37 +32,12 @@ export function ChainSwitcher() {
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
-  useEffect(() => {
-    if (isConnected && pendingChainId && chainId !== pendingChainId) {
-      switchChain(
-        { chainId: pendingChainId },
-        {
-          onSuccess: () => {
-            toast.success(`Switched to ${SUPPORTED_CHAINS[pendingChainId].name}`)
-          },
-          onError: () => {
-            toast.error("Network switch cancelled")
-          },
-        },
-      )
-    }
-    if (isConnected && pendingChainId) {
-      setPendingChainId(null)
-    }
-  }, [isConnected, chainId, pendingChainId, switchChain])
-
   function handleSwitch(target: SupportedChainId) {
     if (target === activeChainId) {
       setOpen(false)
       return
     }
-    if (!isConnected) {
-      setOpen(false)
-      toast.info("Connect your wallet to switch networks")
-      setPendingChainId(target)
-      openConnectModal?.()
-      return
-    }
+    setOpen(false)
     switchChain(
       { chainId: target },
       {
@@ -73,8 +45,8 @@ export function ChainSwitcher() {
           toast.success(`Switched to ${SUPPORTED_CHAINS[target].name}`)
           setOpen(false)
         },
-        onError: () => {
-          toast.error("Network switch cancelled")
+        onError: (error: Error) => {
+          toast.error(error?.message ?? "Network switch cancelled")
         },
       },
     )
@@ -86,17 +58,25 @@ export function ChainSwitcher() {
         onClick={() => setOpen(!open)}
         disabled={isPending}
         className={cn(
-          "flex items-center gap-2 h-8 px-3 rounded-full text-sm font-medium transition-colors",
+          "flex items-center gap-2 h-9 px-3 rounded-full text-sm font-medium transition-colors",
           "bg-white/5 border border-white/10 hover:bg-white/10",
           "text-neutral-300 hover:text-white",
           "disabled:opacity-50",
         )}
       >
-        <img src={ethLogo} alt="" className="h-4 w-4" />
-        <span className="hidden sm:inline">{current.shortName}</span>
-        <span className="hidden md:inline text-neutral-500">
-          {current.isTestnet ? "Testnet" : "Mainnet"}
+        {isPending ? (
+          <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+        ) : (
+          <img src={ethLogo} alt="" className="h-4 w-4" />
+        )}
+        <span className="hidden sm:inline">
+          {isPending ? "Switching..." : current.shortName}
         </span>
+        {!isPending && (
+          <span className="hidden md:inline text-neutral-500">
+            {current.isTestnet ? "Testnet" : "Mainnet"}
+          </span>
+        )}
         <ChevronDown
           className={cn(
             "h-3 w-3 text-neutral-500 transition-transform",
@@ -109,17 +89,16 @@ export function ChainSwitcher() {
         <div className="absolute right-0 top-full mt-2 w-56 bg-neutral-900 border border-neutral-800 rounded-xl shadow-2xl overflow-hidden z-50">
           <div className="p-1">
             {chainEntries.map(([id, chain]) => {
-              const isActive = id === activeChainId
+              const numId = Number(id) as SupportedChainId
+              const isActive = numId === activeChainId
               return (
                 <button
                   key={id}
-                  onClick={() => handleSwitch(id)}
+                  onClick={() => handleSwitch(numId)}
                   disabled={isPending}
                   className={cn(
                     "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors",
-                    isActive
-                      ? "bg-white/5 text-white"
-                      : "text-neutral-400 hover:text-white hover:bg-white/5",
+                    "text-neutral-400 hover:text-white hover:bg-white/5",
                     "disabled:opacity-50",
                   )}
                 >

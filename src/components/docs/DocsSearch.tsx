@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router"
 import { Search, X } from "lucide-react"
 import { getAllDocPages, type DocPage } from "@/lib/docs"

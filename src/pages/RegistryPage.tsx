@@ -14,8 +14,8 @@ export function RegistryPage() {
   const localPairs = getTokenPairsForChain(chainId)
   const { pairs: onChainPairs, isLoading, refetch, isFromChain } = useRegistryPairs()
   const mergedPairs = useMemo(
-    () => mergePairs(onChainPairs, localPairs),
-    [onChainPairs, localPairs],
+    () => mergePairs(onChainPairs, localPairs, isFromChain),
+    [onChainPairs, localPairs, isFromChain],
   )
 
   return (

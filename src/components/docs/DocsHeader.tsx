@@ -11,7 +11,7 @@ export function DocsHeader({ onSearchOpen }: DocsHeaderProps) {
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a] border-b border-white/10">
       <div className="max-w-[1600px] mx-auto px-4 md:px-6 h-14 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link to="/" className="flex items-center gap-1.5 no-underline">
+          <Link to="/registry" className="flex items-center gap-1.5 no-underline">
             <img src={logoWhite} alt="Qube" className="h-7 w-7" />
             <span className="font-display text-lg font-black tracking-tight text-white">
               Qube

@@ -103,6 +103,8 @@ function InlineCode({ children }: { children: ReactNode }) {
 }
 
 export function DocsMarkdownRenderer({ content, onHeadingsExtracted }: DocsMarkdownRendererProps) {
+  const navigate = useNavigate()
+
   useEffect(() => {
     const headings: { id: string; text: string; level: number }[] = []
     const lines = content.split("\n")

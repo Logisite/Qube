@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router"
 import { Layout } from "./components/layout/Layout"
 import { DocsLayout } from "./components/docs/DocsLayout"
-import { LandingPage } from "./pages/LandingPage"
+
 import { RegistryPage } from "./pages/RegistryPage"
 import { FaucetPage } from "./pages/FaucetPage"
 import { WrapPage } from "./pages/WrapPage"

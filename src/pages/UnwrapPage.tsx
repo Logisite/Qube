@@ -15,9 +15,9 @@ export function UnwrapPage() {
   const { openConnectModal } = useConnectModal()
   const [searchParams] = useSearchParams()
 
-  const { pairs: onChainPairs } = useRegistryPairs()
+  const { pairs: onChainPairs, isFromChain } = useRegistryPairs()
   const localPairs = useMemo(() => getTokenPairsForChain(chainId), [chainId])
-  const mergedPairs = useMemo(() => mergePairs(onChainPairs, localPairs), [onChainPairs, localPairs])
+  const mergedPairs = useMemo(() => mergePairs(onChainPairs, localPairs, isFromChain), [onChainPairs, localPairs, isFromChain])
 
   const initialTokenIndex = useMemo(() => {
     const tokenParam = searchParams.get("token")

@@ -27,16 +27,16 @@ export function Navbar() {
   return (
     <header className="fixed top-0 left-0 right-0 w-full z-[9999] backdrop-blur-md border-b bg-black/50 border-white/5 text-white">
       <div className="max-w-7xl mx-auto px-6 md:px-10 h-14 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-1.5 no-underline">
+        <Link to="/registry" className="flex items-center gap-1.5 no-underline">
           <img
             src={logoWhite}
             alt="Qube logo"
-            className="h-8 w-8 md:h-10 md:w-10"
+            className="h-6 w-6 md:h-7 md:w-7"
           />
-          <span className="font-display text-xl md:text-2xl font-black tracking-tight text-white">
+          <span className="font-display text-base md:text-lg font-bold tracking-tight text-white">
             Qube
           </span>
-          <div className="w-[3px] h-5 bg-brand-green rounded-sm" />
+          <div className="w-[3px] h-3 bg-brand-green rounded-sm" />
         </Link>
 
         <nav className="hidden md:flex items-center gap-8 font-semibold text-sm text-neutral-400">
@@ -55,10 +55,10 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <ChainSwitcher />
           <div className="hidden md:block">
-            <ConnectButton />
+            <ConnectButton chainStatus="none" />
           </div>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
@@ -94,7 +94,7 @@ export function Navbar() {
               </nav>
               <div className="px-4 pt-4 flex items-center gap-2">
                 <ChainSwitcher />
-                <ConnectButton />
+                <ConnectButton chainStatus="none" />
               </div>
             </SheetContent>
           </Sheet>

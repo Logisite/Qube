@@ -25,6 +25,7 @@ import type { Config } from "wagmi"
 export class LazyViemSigner {
   private readonly config: Config
   private signer: ViemSigner | null = null
+  private resolving: Promise<ViemSigner> | null = null
 
   constructor(signerConfig: { config: Config }) {
     this.config = signerConfig.config
@@ -32,7 +33,18 @@ export class LazyViemSigner {
 
   private async resolve(): Promise<ViemSigner> {
     if (this.signer) return this.signer
+    if (this.resolving) return this.resolving
 
+    this.resolving = this._createSigner()
+    try {
+      this.signer = await this.resolving
+      return this.signer
+    } finally {
+      this.resolving = null
+    }
+  }
+
+  private async _createSigner(): Promise<ViemSigner> {
     const account = getAccount(this.config)
     const chainId = account.chainId ?? 11155111
 
@@ -41,13 +53,11 @@ export class LazyViemSigner {
 
     const walletClient = await getWalletClient(this.config, { chainId })
 
-    this.signer = new ViemSigner({
+    return new ViemSigner({
       publicClient,
       walletClient: walletClient ?? undefined,
       ethereum: typeof window !== "undefined" ? window.ethereum : undefined,
     })
-
-    return this.signer
   }
 
   private reset(): void {
@@ -55,7 +65,7 @@ export class LazyViemSigner {
   }
 
   async getChainId(): Promise<number> {
-    return (await this.resolve()).getChainId()
+    return getAccount(this.config).chainId ?? 11155111
   }
 
   async getAddress(): Promise<Address> {
@@ -101,10 +111,13 @@ export class LazyViemSigner {
   subscribe(callbacks: SignerLifecycleCallbacks = {}): () => void {
     this.reset()
     return watchAccount(this.config, {
-      onChange: (_prev, curr) => {
+      onChange: (prev, curr) => {
         if (curr.status === "disconnected") {
           this.reset()
           callbacks.onDisconnect?.()
+        } else if (prev.chainId !== curr.chainId && curr.chainId !== undefined) {
+          this.reset()
+          callbacks.onChainChange?.(curr.chainId)
         }
       },
     })
